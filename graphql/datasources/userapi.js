@@ -54,7 +54,7 @@ class UserAPI extends DataSource {
 
   async acquireLanguage({ languageId }) {
     const userId = this.context.user.id;
-    const res = await this.store.languages.findOrCreate({
+    const res = await this.store.userLanguages.findOrCreate({
       where: { userId, languageId },
     });
     return res && res.length ? res[0].get() : false;
@@ -62,12 +62,12 @@ class UserAPI extends DataSource {
 
   async forgetLanguage({ languageId }) {
     const userId = this.context.user.id;
-    return !!this.store.languages.destroy({ where: { userId, languageId } });
+    return !!this.store.userLanguages.destroy({ where: { userId, languageId } });
   }
 
   async getLanguageIdsByUser() {
     const userId = this.context.user.id;
-    const found = await this.store.languages.findAll({
+    const found = await this.store.userLanguages.findAll({
       where: { userId },
     });
     return found && found.length
@@ -78,7 +78,7 @@ class UserAPI extends DataSource {
   async isAcquired({ languageId }) {
     if (!this.context || !this.context.user) return false;
     const userId = this.context.user.id;
-    const found = await this.store.languages.findAll({
+    const found = await this.store.userLanguages.findAll({
       where: { userId, languageId },
     });
     return found && found.length > 0;

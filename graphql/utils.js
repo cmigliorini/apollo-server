@@ -1,5 +1,8 @@
-const UserLanguage = require('../models/userlanguage');
+const UserLanguage = require('../models').UserLanguage;
 const User = require('../models').User;
+const LanguageType = require('../models').LanguageType;
+const LanguageTypesLanguage = require('../models').LanguageTypeLanguage;
+const Languages = require('../models').Language;
 
 module.exports.paginateResults = ({
   after: cursor,
@@ -23,18 +26,28 @@ module.exports.paginateResults = ({
     ? cursorIndex === results.length - 1 // don't let us overflow
       ? []
       : results.slice(
-          cursorIndex + 1,
-          Math.min(results.length, cursorIndex + 1 + pageSize),
-        )
+        cursorIndex + 1,
+        Math.min(results.length, cursorIndex + 1 + pageSize),
+      )
     : results.slice(0, pageSize);
 };
 
 module.exports.createStore = () => {
 
   const users = User;
-  users.sync({force:true});
+  users.sync();
 
   const userLanguages = UserLanguage;
+  userLanguages.sync();
 
-  return { users, userLanguages };
+  const languageTypes = LanguageType;
+  languageTypes.sync();
+
+  const languageTypesLanguage = LanguageTypesLanguage;
+  languageTypesLanguage.sync();
+
+  const languages = Languages;
+  languages.sync();
+
+  return { users, userLanguages, languages, languageTypes, languageTypesLanguage };
 };

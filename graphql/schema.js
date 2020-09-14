@@ -19,17 +19,20 @@ const typeDefs = gql`
   }
   type LanguageTypeLanguage {
     languageId: Int!,
-    languageTypeId: Int!,
+    languageTypeId: Int!
   }
   type UserLanguage {
     languageId: Int!,
-    userId: Int!,
+    userId: Int!
   }
   type Query {
-    me: User
+    me: User,
+    languages: [Language],
+    languageTypes: [LanguageType]
   }
   type Mutation {
-    login(email: String): User
+    login(email: String): User,
+    acquireLanguage(languageId:Int!): UserLanguage,
   }
 `;
 

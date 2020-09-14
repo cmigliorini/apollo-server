@@ -28,7 +28,7 @@ class UserAPI extends DataSource {
       this.context && this.context.user ? this.context.user.email : emailArg;
     if (!email || !isEmail.validate(email)) return null;
 
-    let user = await this.store.users.findOne({ where: { email } });
+    let user = await this.store.users.findOne({ where: { email: email } });
 
     if (!user) {
       user = await this.store.users.create({ email: email ,token : new Buffer.from(email).toString('base64')});

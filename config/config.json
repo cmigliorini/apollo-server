@@ -1,0 +1,10 @@
+{
+  "development": {
+    "storage": "mydb-dev.sqlite",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "use_env_variable": "MigApolloAWS",
+    "dialect": "mysql"
+  }
+}

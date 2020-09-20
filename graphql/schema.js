@@ -28,11 +28,20 @@ const typeDefs = gql`
   type Query {
     me: User,
     languages: [Language],
-    languageTypes: [LanguageType]
+    languageTypes: [LanguageType],
+    userLanguages: [UserLanguage],
+    getLanguageIdsByUser: [Int],
+    isAcquired(languageId: Int!): Boolean,
+    languageTypesLanguages: [LanguageTypeLanguage]
   }
   type Mutation {
     login(email: String): User,
     acquireLanguage(languageId:Int!): UserLanguage,
+    acquireLanguages(languageIds:[Int!]): [UserLanguage],
+    forgetLanguage(languageId:Int!): Boolean,
+    insertLanguage(name:String, description:String): Language,
+    insertLanguageType(name:String, description:String): LanguageType,
+    associateLanguageToType(languageId: Int!, languageTypeId: Int!): LanguageTypeLanguage,
   }
 `;
 

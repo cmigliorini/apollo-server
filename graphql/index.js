@@ -14,10 +14,19 @@ const resolvers = {
   Query: {
     me: async (_, __, { dataSources }) =>
       dataSources.userAPI.findOrCreateUser(),
+    // TODO: create LanguageApi
     languages: async (_, __, { dataSources }) =>
       await store.languages.findAll(),
+    // TODO: create LanguageTypesApi
     languageTypes: async (_, __, { dataSources }) =>
       await store.languageTypes.findAll(),
+    languageTypesLanguages: async (_, __, { dataSources }) =>
+      await store.languageTypesLanguage.findAll(),
+    // TODO: create UserLanguagesApi
+    userLanguages: async (_, __, { dataSources }) =>
+      await store.userLanguages.findAll(),
+    getLanguageIdsByUser: async (_, __, { dataSources }) =>
+      await dataSources.userAPI.getLanguageIdsByUser(),
   },
   Mutation: {
     login: async (_, { email }, { dataSources }) => {
@@ -26,7 +35,24 @@ const resolvers = {
     },
     acquireLanguage: async (_, { languageId }, { dataSources }) => {
       return await dataSources.userAPI.acquireLanguage({ languageId });
-    }
+    },
+    acquireLanguages: async (_, { languageIds }, { dataSources }) => {
+      return await dataSources.userAPI.acquireLanguages({ languageIds });
+    },
+    forgetLanguage: async (_, { languageId }, { dataSources }) => {
+      return await dataSources.userAPI.forgetLanguage({ languageId });
+    },
+    // TODO:  migrate this to LanguageApi
+    insertLanguage: async (_, { name, description }, { dataSources }) => {
+      return await dataSources.userAPI.insertLanguage({ name:name, description:description });
+    },
+    // TODO:  migrate this to LanguageTypesApi
+    insertLanguageType: async (_, { name, description }, { dataSources }) => {
+      return await dataSources.userAPI.insertLanguageType({ name, description });
+    },
+    // TODO:  migrate this to LanguageApi
+    associateLanguageToType: async (_, {languageId, languageTypeId}, {dataSources}) => 
+      await dataSources.userAPI.associateLanguageToType({ languageId, languageTypeId }),
   }
 };
 // the function that sets up the global context for each resolver, using the req

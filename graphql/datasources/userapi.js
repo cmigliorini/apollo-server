@@ -31,7 +31,7 @@ class UserAPI extends DataSource {
     let user = await this.store.users.findOne({ where: { email: email } });
 
     if (!user) {
-      user = await this.store.users.create({ email: email ,token : new Buffer.from(email).toString('base64')});
+      user = await this.store.users.create({ email: email, token: new Buffer.from(email).toString('base64') });
     }
     return user;
   }
@@ -68,7 +68,7 @@ class UserAPI extends DataSource {
   async getLanguageIdsByUser() {
     const userId = this.context.user.id;
     const found = await this.store.userLanguages.findAll({
-      where: { userId },
+      where: { userId: userId },
     });
     return found && found.length
       ? found.map(l => l.dataValues.languageId).filter(l => !!l)
@@ -82,6 +82,25 @@ class UserAPI extends DataSource {
       where: { userId, languageId },
     });
     return found && found.length > 0;
+  }
+
+  async insertLanguage({ name, description }) {
+    if (!this.context || !this.context.user) return false;
+    const res = await this.store.languages.findOrCreate({ where: { name, description } });
+    return res && res.length ? res[0].get() : false;
+  }
+
+  async insertLanguageType({ name, description }) {
+    if (!this.context || !this.context.user) return false;
+    const res = await this.store.languageTypes.findOrCreate({ where: { name, description } });
+    return res && res.length ? res[0].get() : false;
+  }
+
+  async associateLanguageToType({languageId, languageTypeId})
+  {
+    if (!this.context || !this.context.user) return false;
+    const res = await this.store.languageTypesLanguage.findOrCreate({ where: { languageId, languageTypeId } });
+    return res && res.length ? res[0].get() : false;
   }
 }
 

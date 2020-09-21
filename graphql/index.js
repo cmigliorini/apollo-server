@@ -28,8 +28,11 @@ const resolvers = {
   },
   Mutation: {
     login: async (_, { email }, { dataSources }) => {
-      const user = await dataSources.userAPI.findOrCreateUser(email);
-      return user;
+      const user = await dataSources.userAPI.findOrCreateUser({ email });
+      if (user) {
+        user.token = new Buffer.from(email).toString('base64');
+        return user;
+      }
     },
     acquireLanguage: async (_, { languageId }, { dataSources }) => {
       return await dataSources.userAPI.acquireLanguage({ languageId });

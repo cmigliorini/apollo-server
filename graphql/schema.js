@@ -2,47 +2,47 @@ const { gql } = require('apollo-server-azure-functions');
 
 const typeDefs = gql`
   type User {
-    id: Int!
+    id: ID!
     email: String!,
     token: String,
     profileImage: String
     languages: [Language],
   }
   type Language {
-    id: Int!
+    id: ID!
     name: String!,
     description: String,
   }
   type LanguageType {
-    id: Int!
+    id: ID!
     name: String!,
     description: String,
   }
   type LanguageTypeLanguage {
-    languageId: Int!,
-    languageTypeId: Int!
+    languageId: ID!,
+    languageTypeId: ID!
   }
   type UserLanguage {
-    languageId: Int!,
-    userId: Int!
+    languageId: ID!,
+    userId: ID!
   }
   type Query {
     me: User,
     allLanguages: [Language],
     languageTypes: [LanguageType],
     userLanguages: [UserLanguage],
-    getLanguageIdsByUser: [Int],
-    isAcquired(languageId: Int!): Boolean,
+    getLanguageIdsByUser: [ID],
+    isAcquired(languageId: ID!): Boolean,
     languageTypesLanguages: [LanguageTypeLanguage]
   }
   type Mutation {
-    login(email: String): User,
-    acquireLanguage(languageId:Int!): UserLanguage,
-    acquireLanguages(languageIds:[Int!]): [UserLanguage],
+    login(email: String): User!,
+    acquireLanguage(languageId:ID!): UserLanguage,
+    acquireLanguages(languageIds:[ID!]): [UserLanguage],
     forgetLanguage(languageId:Int!): Boolean,
     insertLanguage(name:String, description:String): Language,
     insertLanguageType(name:String, description:String): LanguageType,
-    associateLanguageToType(languageId: Int!, languageTypeId: Int!): LanguageTypeLanguage,
+    associateLanguageToType(languageId: ID!, languageTypeId: ID!): LanguageTypeLanguage,
   }
 `;
 

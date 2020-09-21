@@ -23,17 +23,13 @@ class UserAPI extends DataSource {
    * have to be. If the user is already on the context, it will use that user
    * instead
    */
-  async findOrCreateUser(emailArg = null) {
+  async findOrCreateUser({ email: emailArg } = {}) {
     const email =
       this.context && this.context.user ? this.context.user.email : emailArg;
     if (!email || !isEmail.validate(email)) return null;
 
-    let user = await this.store.users.findOne({ where: { email: email } });
-
-    if (!user) {
-      user = await this.store.users.create({ email: email, token: new Buffer.from(email).toString('base64') });
-    }
-    return user;
+    const users = await this.store.users.findOrCreate({ where: { email } });
+    return users && users[0] ? users[0] : null;
   }
 
   async acquireLanguages({ languageIds }) {

@@ -14,6 +14,8 @@ const resolvers = {
   Query: {
     me: async (_, __, { dataSources }) =>
       dataSources.userAPI.findOrCreateUser(),
+    language: async (_, {languageId}, { dataSources}) =>
+      dataSources.userAPI.getLanguageById({ languageId }),
     allLanguages: async (_, __, { dataSources }) => 
       await store.languages.findAll(),
     languageTypes: async (_, __, { dataSources }) =>

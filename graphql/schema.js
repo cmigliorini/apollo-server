@@ -28,6 +28,7 @@ const typeDefs = gql`
   }
   type Query {
     me: User,
+    language(languageId: ID!): Language,
     allLanguages: [Language],
     languageTypes: [LanguageType],
     userLanguages: [UserLanguage],

@@ -65,6 +65,17 @@ class UserAPI extends DataSource {
     return !!this.store.userLanguages.destroy({ where: { userId, languageId } });
   }
 
+  async getLanguagesByIds({languageIds}) {
+    return Promise.all(
+      languageIds.map(languageId => this.getLanguageById({ languageId })),
+    );
+  }
+
+  async getLanguageById({ languageId }) {
+    const res = await this.store.languages.findOne({ where: { id: languageId } });
+    return res;
+  }
+
   async getLanguageIdsByUser() {
     const userId = this.context.user.id;
     const found = await this.store.userLanguages.findAll({

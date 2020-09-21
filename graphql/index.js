@@ -14,10 +14,8 @@ const resolvers = {
   Query: {
     me: async (_, __, { dataSources }) =>
       dataSources.userAPI.findOrCreateUser(),
-    // TODO: create LanguageApi
-    languages: async (_, __, { dataSources }) =>
+    allLanguages: async (_, __, { dataSources }) => 
       await store.languages.findAll(),
-    // TODO: create LanguageTypesApi
     languageTypes: async (_, __, { dataSources }) =>
       await store.languageTypes.findAll(),
     languageTypesLanguages: async (_, __, { dataSources }) =>
@@ -53,6 +51,21 @@ const resolvers = {
     // TODO:  migrate this to LanguageApi
     associateLanguageToType: async (_, {languageId, languageTypeId}, {dataSources}) => 
       await dataSources.userAPI.associateLanguageToType({ languageId, languageTypeId }),
+  },
+  User: {
+    languages: async (_, __, { dataSources }) => {
+      // get ids of languages by user
+      const languageIds = await dataSources.userAPI.getLanguageIdsByUser();
+
+      if (!languageIds.length) return [];
+
+      // look up those languages by their ids
+      return (
+        dataSources.userAPI.getLanguagesByIds({
+          languageIds
+        }) || []
+      );
+    }
   }
 };
 // the function that sets up the global context for each resolver, using the req

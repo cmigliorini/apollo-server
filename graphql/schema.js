@@ -6,6 +6,7 @@ const typeDefs = gql`
     email: String!,
     token: String,
     profileImage: String
+    languages: [Language],
   }
   type Language {
     id: Int!
@@ -27,7 +28,7 @@ const typeDefs = gql`
   }
   type Query {
     me: User,
-    languages: [Language],
+    allLanguages: [Language],
     languageTypes: [LanguageType],
     userLanguages: [UserLanguage],
     getLanguageIdsByUser: [Int],

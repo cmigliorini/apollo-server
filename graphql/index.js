@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server-azure-functions');
 const isEmail = require('isemail');
 
 const UserAPI = require('./datasources/userapi');
+const LanguageAPI = require('./datasources/languageapi');
 const { createStore } = require('./utils');
 const typeDefs = require('./schema');
 
@@ -18,11 +19,10 @@ const resolvers = {
       dataSources.userAPI.getLanguageById({ languageId }),
     allLanguages: async (_, __, { dataSources }) => 
       await store.languages.findAll(),
-    languageTypes: async (_, __, { dataSources }) =>
+    allLanguageTypes: async (_, __, { dataSources }) =>
       await store.languageTypes.findAll(),
     languageTypesLanguages: async (_, __, { dataSources }) =>
       await store.languageTypesLanguage.findAll(),
-    // TODO: create UserLanguagesApi
     userLanguages: async (_, __, { dataSources }) =>
       await store.userLanguages.findAll(),
     getLanguageIdsByUser: async (_, __, { dataSources }) =>
@@ -101,9 +101,19 @@ const resolvers = {
       );
     },
   },
+  // Language-context resolves
   Language: {
-    isAcquired: async (language, _, { dataSources }) =>
+    // Is this language acquired by current user?
+    isAcquired: async (language, __, { dataSources }) =>
       dataSources.userAPI.isAcquired({ languageId: language.id }),
+    // What are this language's LanguageTypes?
+    languageTypes: async (language, __, { dataSources }) => {
+      // get ids of language types by language
+      const languageTypeIds = await dataSources.languageAPI.getLanguageTypesIdsByLanguage({ languageId: language.id});
+      if (!languageTypeIds.length) return [];
+      // look up those languages by their ids
+      return dataSources.languageAPI.getLanguagesTypesByIds({ languageTypeIds }) || [];
+    },
   },
 };
 // the function that sets up the global context for each resolver, using the req
@@ -128,7 +138,7 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   dataSources: () => ({
-    //kanguagesAPI: new LanguagesAPI({store}),
+    languageAPI: new LanguageAPI({store}),
     userAPI: new UserAPI({ store })
   })
 });

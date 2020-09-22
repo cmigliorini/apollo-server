@@ -12,7 +12,8 @@ const typeDefs = gql`
     id: ID!
     name: String!,
     description: String,
-    isAcquired: Boolean!
+    isAcquired: Boolean!,
+    languageTypes: [LanguageType!]
   }
   type LanguageType {
     id: ID!
@@ -37,7 +38,8 @@ const typeDefs = gql`
     me: User,
     language(languageId: ID!): Language,
     allLanguages: [Language],
-    languageTypes: [LanguageType],
+    allLanguageTypes: [LanguageType],
+    getLanguageTypeIdsByLanguage(languageId: ID!): [LanguageType!],
     userLanguages: [UserLanguage],
     getLanguageIdsByUser: [ID],
     isAcquired(languageId: ID!): Boolean,

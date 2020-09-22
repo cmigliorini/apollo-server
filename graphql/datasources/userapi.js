@@ -38,7 +38,7 @@ class UserAPI extends DataSource {
 
     let results = [];
 
-    // for each launch id, try to book the trip and add it to the results array
+    // for each language id, try to book the trip and add it to the results array
     // if successful
     for (const languageId of languageIds) {
       const res = await this.acquireLanguage({ languageId: languageId });

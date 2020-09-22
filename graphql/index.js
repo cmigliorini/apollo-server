@@ -40,10 +40,39 @@ const resolvers = {
       return await dataSources.userAPI.acquireLanguage({ languageId });
     },
     acquireLanguages: async (_, { languageIds }, { dataSources }) => {
-      return await dataSources.userAPI.acquireLanguages({ languageIds });
+      const results = await dataSources.userAPI.acquireLanguages({ languageIds });
+      
+      const languages = await dataSources.userAPI.getLanguagesByIds({
+        languageIds,
+      });
+
+      return {
+        success: results && results.length === languageIds.length,
+        message:
+          results.length === languageIds.length
+            ? 'languages acquired successfully'
+            : `the following languages couldn't be acquired: ${languageIds.filter(
+                id => !results.includes(id),
+              )}`,
+          languages,
+      };
     },
     forgetLanguage: async (_, { languageId }, { dataSources }) => {
-      return await dataSources.userAPI.forgetLanguage({ languageId });
+      const result = await dataSources.userAPI.forgetLanguage({ languageId });
+      
+      if (!result)
+        return {
+          success: false,
+          message: 'failed to forget language',
+        };
+
+      const language = await dataSources.userAPI.getLanguageById({ languageId });
+      return {
+        success: true,
+        message: 'language forgotten',
+        languages: [language],
+      };
+
     },
     // TODO:  migrate this to LanguageApi
     insertLanguage: async (_, { name, description }, { dataSources }) => {
@@ -70,8 +99,12 @@ const resolvers = {
           languageIds
         }) || []
       );
-    }
-  }
+    },
+  },
+  Language: {
+    isAcquired: async (language, _, { dataSources }) =>
+      dataSources.userAPI.isAcquired({ languageId: language.id }),
+  },
 };
 // the function that sets up the global context for each resolver, using the req
 const context = async (integrationContext) => {
@@ -100,4 +133,6 @@ const server = new ApolloServer({
   })
 });
 
-exports.graphqlHandler = server.createHandler();
+exports.graphqlHandler = server.createHandler({
+  cors: false
+});

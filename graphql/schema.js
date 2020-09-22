@@ -12,6 +12,7 @@ const typeDefs = gql`
     id: ID!
     name: String!,
     description: String,
+    isAcquired: Boolean!
   }
   type LanguageType {
     id: ID!
@@ -26,6 +27,12 @@ const typeDefs = gql`
     languageId: ID!,
     userId: ID!
   }
+  type LanguageUpdateResponse {
+    success: Boolean!
+    message: String
+    languages: [Language]
+  }
+
   type Query {
     me: User,
     language(languageId: ID!): Language,
@@ -39,8 +46,8 @@ const typeDefs = gql`
   type Mutation {
     login(email: String): User!,
     acquireLanguage(languageId:ID!): UserLanguage,
-    acquireLanguages(languageIds:[ID!]): [UserLanguage],
-    forgetLanguage(languageId:Int!): Boolean,
+    acquireLanguages(languageIds:[ID!]): LanguageUpdateResponse,
+    forgetLanguage(languageId:ID!): LanguageUpdateResponse,
     insertLanguage(name:String, description:String): Language,
     insertLanguageType(name:String, description:String): LanguageType,
     associateLanguageToType(languageId: ID!, languageTypeId: ID!): LanguageTypeLanguage,

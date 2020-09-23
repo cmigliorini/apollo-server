@@ -53,6 +53,7 @@ const typeDefs = gql`
     insertLanguage(name:String, description:String): Language,
     insertLanguageType(name:String, description:String): LanguageType,
     associateLanguageToType(languageId: ID!, languageTypeId: ID!): LanguageTypeLanguage,
+    dissociateLanguageFromType(languageId: ID!, languageTypeId: ID!): Boolean,
   }
 `;
 

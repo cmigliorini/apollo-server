@@ -109,6 +109,13 @@ class UserAPI extends DataSource {
     const res = await this.store.languageTypesLanguage.findOrCreate({ where: { languageId, languageTypeId } });
     return res && res.length ? res[0].get() : false;
   }
+
+  async dissociateLanguageFromType({languageId, languageTypeId})
+  {
+    if (!this.context || !this.context.user) return false;
+    const res = await this.store.languageTypesLanguage.destroy({ where: { languageId, languageTypeId } });
+    return res && res > 0;
+  }
 }
 
 module.exports = UserAPI;

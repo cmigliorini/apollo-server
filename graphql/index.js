@@ -85,6 +85,9 @@ const resolvers = {
     // TODO:  migrate this to LanguageApi
     associateLanguageToType: async (_, {languageId, languageTypeId}, {dataSources}) => 
       await dataSources.userAPI.associateLanguageToType({ languageId, languageTypeId }),
+    // TODO:  migrate this to LanguageApi
+    dissociateLanguageFromType: async (_, {languageId, languageTypeId}, {dataSources}) => 
+      await dataSources.userAPI.dissociateLanguageFromType({ languageId, languageTypeId }),
   },
   User: {
     languages: async (_, __, { dataSources }) => {
